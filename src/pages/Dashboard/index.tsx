@@ -10,6 +10,7 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 
 import formatValue from '../../utils/formatValue';
+import formatDate from '../../utils/formatDate';
 
 import { Container, CardContainer, Card, TableContainer } from './styles';
 
@@ -43,8 +44,12 @@ const Dashboard: React.FC = () => {
         // eslint-disable-next-line no-param-reassign
         transaction.formattedValue =
           transaction.type === 'income'
-            ? ` ${formatValue(transaction.value)}`
+            ? formatValue(transaction.value)
             : `-  ${formatValue(transaction.value)}`;
+        // eslint-disable-next-line no-param-reassign
+        transaction.formattedDate = formatDate(
+          new Date(transaction.created_at),
+        );
       });
 
       setTransactions(transactions);
@@ -109,7 +114,7 @@ const Dashboard: React.FC = () => {
                   <td className="title">{transaction.title}</td>
                   <td className="income">{transaction.formattedValue}</td>
                   <td>{transaction.category.title}</td>
-                  <td>{transaction.created_at}</td>
+                  <td>{transaction.formattedDate}</td>
                 </tr>
               </tbody>
             ))}
