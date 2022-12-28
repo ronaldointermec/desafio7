@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <Header rote={{ path: '/import', buttonName: 'Importar' }} />
       <Container>
         <CardContainer>
           <Card>

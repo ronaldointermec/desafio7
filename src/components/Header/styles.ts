@@ -33,7 +33,7 @@ export const Container = styled.div<ContainerProps>`
         }
       }
       button {
-        background: #ff872c;
+        background: #5636d3;
         color: #fff;
         border-radius: 5px;
         padding: 15px 80px;

@@ -40,7 +40,7 @@ const Import: React.FC = () => {
 
   return (
     <>
-      <Header size="small" />
+      <Header rote={{ path: '/', buttonName: 'Voltar' }} size="small" />
       <Container>
         <Title>Importar uma transação</Title>
         <ImportFileContainer>
