@@ -32,7 +32,7 @@ export const Container = styled.div<ContainerProps>`
           opacity: 0.6;
         }
       }
-      button {
+      /* button {
         background: #5636d3;
         color: #fff;
         border-radius: 5px;
@@ -43,7 +43,7 @@ export const Container = styled.div<ContainerProps>`
         &:hover {
           background: ${shade(0.2, '#ff872c')};
         }
-      }
+      } */
     }
   }
 `;

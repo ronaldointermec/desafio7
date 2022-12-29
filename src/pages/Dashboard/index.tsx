@@ -32,38 +32,36 @@ interface Balance {
 }
 
 const Dashboard: React.FC = () => {
-  const [t, setTransactions] = useState<Transaction[]>([]);
-  const [b, setBalance] = useState<Balance>({} as Balance);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [balance, setBalance] = useState<Balance>({} as Balance);
 
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
       const response = await api.get('/transactions');
-      const { balance, transactions } = response.data;
 
-      transactions.map((transaction: Transaction) => {
-        // eslint-disable-next-line no-param-reassign
-        transaction.formattedValue =
+      const b = response.data.balance;
+      const t = response.data.transactions;
+
+      const transactionFormatted = t.map((transaction: Transaction) => ({
+        ...transaction,
+        formattedValue:
           transaction.type === 'income'
             ? formatValue(transaction.value)
-            : `-  ${formatValue(transaction.value)}`;
-        // eslint-disable-next-line no-param-reassign
-        transaction.formattedDate = formatDate(
-          new Date(transaction.created_at),
-        );
-      });
+            : `-  ${formatValue(transaction.value)}`,
+        formattedDate: formatDate(new Date(transaction.created_at)),
+        // formattedDate: new Date(transaction.created_at).toLocaleDateString(
+        //   'pt-br',
+        // ),
+      }));
 
-      setTransactions(transactions);
-      const bal: Balance = {
-        income: '',
-        outcome: '',
-        total: '',
+      setTransactions(transactionFormatted);
+      const balanceFormatted: Balance = {
+        income: formatValue(b.income),
+        outcome: formatValue(b.outcome),
+        total: formatValue(b.total),
       };
 
-      bal.income = `${formatValue(balance.income)}`;
-      bal.outcome = `${formatValue(balance.outcome)}`;
-      bal.total = `${formatValue(balance.total)}`;
-
-      setBalance(bal);
+      setBalance(balanceFormatted);
     }
 
     loadTransactions();
@@ -71,7 +69,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <Header rote={{ path: '/import', buttonName: 'Importar' }} />
+      <Header />
       <Container>
         <CardContainer>
           <Card>
@@ -79,21 +77,21 @@ const Dashboard: React.FC = () => {
               <p>Entradas</p>
               <img src={income} alt="Income" />
             </header>
-            <h1 data-testid="balance-income">{b.income}</h1>
+            <h1 data-testid="balance-income">{balance.income}</h1>
           </Card>
           <Card>
             <header>
               <p>Saídas</p>
               <img src={outcome} alt="Outcome" />
             </header>
-            <h1 data-testid="balance-outcome">{b.outcome}</h1>
+            <h1 data-testid="balance-outcome">{balance.outcome}</h1>
           </Card>
           <Card total>
             <header>
               <p>Total</p>
               <img src={total} alt="Total" />
             </header>
-            <h1 data-testid="balance-total">{b.total}</h1>
+            <h1 data-testid="balance-total">{balance.total}</h1>
           </Card>
         </CardContainer>
 
@@ -107,17 +105,18 @@ const Dashboard: React.FC = () => {
                 <th>Data</th>
               </tr>
             </thead>
-
-            {t.map(transaction => (
-              <tbody key={transaction.id}>
-                <tr>
+            <tbody>
+              {transactions.map(transaction => (
+                <tr key={transaction.id}>
                   <td className="title">{transaction.title}</td>
-                  <td className="income">{transaction.formattedValue}</td>
+                  <td className={transaction.type}>
+                    {transaction.formattedValue}
+                  </td>
                   <td>{transaction.category.title}</td>
                   <td>{transaction.formattedDate}</td>
                 </tr>
-              </tbody>
-            ))}
+              ))}
+            </tbody>
           </table>
         </TableContainer>
       </Container>
