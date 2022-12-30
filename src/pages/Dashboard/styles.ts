@@ -3,7 +3,7 @@ import styled from 'styled-components';
 interface CardProps {
   total?: boolean;
 }
-export const Header = styled.header``;
+// export const Header = styled.header``;
 
 export const Container = styled.div`
   width: 100%;
